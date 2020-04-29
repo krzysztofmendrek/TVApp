@@ -1,5 +1,5 @@
 import { mapListToDOMElements, createDOMElem } from "./DOMinteractions.js";
-import { getShowsByKey } from "./requests.js";
+import { getShowsByKey, getShowById } from "./requests.js";
 
 class TVApp {
   constructor() {
@@ -35,18 +35,39 @@ class TVApp {
   }
 
   fetchAndDisplayShows = () => {
-    getShowsByKey(this.selectedName).then(shows => this.renderCards(shows));
+    getShowsByKey(this.selectedName).then(shows => this.renderCardsOnList(shows));
   }
 
-  renderCards = shows => {
+  renderCardsOnList = shows => {
+    Array.from(
+      document.querySelectorAll('[data-show-id]')
+    ).forEach(btn => btn.removeEventListener('click', this.openDeatilsView));
     this.viewElems.showsWrapper.innerHTML = '';
 
     for (const { show } of shows) {
-      this.createShowCard(show);
+      const card = this.createShowCard(show);
+      this.viewElems.showsWrapper.appendChild(card);
     }
   }
 
-  createShowCard = show => {
+  openDeatilsView = event => {
+    const { showId } = event.target.dataset;
+    getShowById(showId).then(show => {
+      const card = this.createShowCard(show, true);
+      this.viewElems.showPreview.appendChild(card);
+      this.viewElems.showPreview.style.display = 'block';
+    })
+  }
+
+  closeDetailsView = event => {
+    const { showId } = event.target.dataset;
+    const closeBtn = document.querySelector(`[id="showPreview"] [data-show-id="${showId}"]`);
+    closeBtn.removeEventListener('click', this.closeDetailsView);
+    this.viewElems.showPreview.style.display = 'none';
+    this.viewElems.showPreview.innerHTML = '';
+  }
+
+  createShowCard = (show, isDetailed) => {
     const divCard = createDOMElem('div', 'card');
     const divCardBody = createDOMElem('div', 'card-body');
     const h5 = createDOMElem('h5', 'card-title', show.name);
@@ -54,15 +75,32 @@ class TVApp {
     let img, p;
 
     if(show.image) {
-      img = createDOMElem('img', 'card-img-top', null, show.image.medium);
+      if(isDetailed){
+        img = createDOMElem('div', 'card-preview-bg');
+        img.style.backgroundImage = `url('${show.image.original}')`
+      } else {
+        img = createDOMElem('img', 'card-img-top', null, show.image.medium);
+      }
     } else {
       img = createDOMElem('img', 'card-img-top', null, 'https://via.placeholder.com/210x295');
     }
 
     if(show.summary) {
-      p = createDOMElem('p', 'card-text', `${show.summary.replace(/(<([^>]+)>)/ig,"").slice(0, 100)}...`);
+      if(isDetailed) {
+        p = createDOMElem('p', 'card-text', show.summary.replace(/(<([^>]+)>)/ig,""));
+      } else {
+        p = createDOMElem('p', 'card-text', `${show.summary.replace(/(<([^>]+)>)/ig,"").slice(0, 100)}...`);
+      }
     } else {
       p = createDOMElem('p', 'card-text', "This show has no summary yet");
+    }
+
+    btn.dataset.showId = show.id;
+
+    if(isDetailed) {
+      btn.addEventListener('click', this.closeDetailsView);
+    } else {
+      btn.addEventListener('click', this.openDeatilsView);
     }
     
     divCard.appendChild(divCardBody);
@@ -70,9 +108,8 @@ class TVApp {
     divCardBody.appendChild(h5);
     divCardBody.appendChild(p);
     divCardBody.appendChild(btn);
-
-    this.viewElems.showsWrapper.appendChild(divCard);
     
+    return divCard;
   }
 }
 
