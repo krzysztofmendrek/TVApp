@@ -56,6 +56,9 @@ class TVApp {
       const card = this.createShowCard(show, true);
       this.viewElems.showPreview.appendChild(card);
       this.viewElems.showPreview.style.display = 'block';
+      const body = document.querySelector('body');
+      body.style.overflow = 'hidden';
+      // $('body').css("overflow", "hidden");
     })
   }
 
@@ -65,6 +68,9 @@ class TVApp {
     closeBtn.removeEventListener('click', this.closeDetailsView);
     this.viewElems.showPreview.style.display = 'none';
     this.viewElems.showPreview.innerHTML = '';
+    const body = document.querySelector('body');
+    // $('body').css("overflow", "initial");
+    body.style.overflow = 'initial';
   }
 
   createShowCard = (show, isDetailed) => {
@@ -77,13 +83,13 @@ class TVApp {
 
     if(show.image) {
       if(isDetailed){
-        img = createDOMElem('div', 'card-preview-bg');
+        img = createDOMElem('div', 'card-preview-bg', null, 'https://via.placeholder.com/210x75');
         img.style.backgroundImage = `url('${show.image.original}')`
       } else {
         img = createDOMElem('img', 'card-img-top', null, show.image.medium);
       }
     } else {
-      img = createDOMElem('img', 'card-img-top', null, 'https://via.placeholder.com/210x75');
+      img = createDOMElem('img', 'card-img-top', null, 'https://via.placeholder.com/210x295');
     }
 
     if(show.summary) {
