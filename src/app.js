@@ -72,6 +72,7 @@ class TVApp {
     const divCardBody = createDOMElem('div', 'card-body');
     const h5 = createDOMElem('h5', 'card-title', show.name);
     const btn = createDOMElem('button', 'btn btn-primary', 'Show details');
+    
     let img, p;
 
     if(show.image) {
@@ -82,7 +83,7 @@ class TVApp {
         img = createDOMElem('img', 'card-img-top', null, show.image.medium);
       }
     } else {
-      img = createDOMElem('img', 'card-img-top', null, 'https://via.placeholder.com/210x295');
+      img = createDOMElem('img', 'card-img-top', null, 'https://via.placeholder.com/210x75');
     }
 
     if(show.summary) {
@@ -95,19 +96,25 @@ class TVApp {
       p = createDOMElem('p', 'card-text', "This show has no summary yet");
     }
 
-    btn.dataset.showId = show.id;
 
-    if(isDetailed) {
-      btn.addEventListener('click', this.closeDetailsView);
-    } else {
-      btn.addEventListener('click', this.openDeatilsView);
-    }
+    
+    const btnReturn = createDOMElem('button', 'btn btn-secondary', 'Close details');
+    btn.dataset.showId = show.id;
+    btnReturn.dataset.showId = show.id;
     
     divCard.appendChild(divCardBody);
     divCardBody.appendChild(img);
     divCardBody.appendChild(h5);
     divCardBody.appendChild(p);
     divCardBody.appendChild(btn);
+
+    if(isDetailed) {
+      divCardBody.removeChild(btn);
+      divCardBody.appendChild(btnReturn);
+      btnReturn.addEventListener('click', this.closeDetailsView);
+    } else {
+      btn.addEventListener('click', this.openDeatilsView);
+    }
     
     return divCard;
   }
