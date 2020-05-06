@@ -58,7 +58,15 @@ body {
   padding-bottom: 35px;
 }
 
+/* .card-body .card-text {
+  padding-bottom: 0;
+} */
+
 .card-body .btn-primary, .card-body .btn-secondary {
   position: absolute;
   bottom: 10px;
+}
+
+.input-group-append {
+  z-index: 0;
 }

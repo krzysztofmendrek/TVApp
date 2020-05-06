@@ -3,5 +3,5 @@ export const getShowsByKey = key => {
 }
 
 export const getShowById = id => {
-  return fetch(`http://api.tvmaze.com/episodes/${id}?embed=show`).then(resp => resp.json());
+  return fetch(`http://api.tvmaze.com/shows/${id}?embed=cast`).then(resp => resp.json());
 }

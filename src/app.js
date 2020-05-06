@@ -56,10 +56,27 @@ class TVApp {
       const card = this.createShowCard(show, true);
       this.viewElems.showPreview.appendChild(card);
       this.viewElems.showPreview.style.display = 'block';
-      const body = document.querySelector('body');
-      body.style.overflow = 'hidden';
-      // $('body').css("overflow", "hidden");
-    })
+      document.body.style.overflow = 'hidden';
+      for (var i=0; i.length; i++) {
+        console.log(show._embedded.cast[i].person.name);
+      }
+    // getShowById(showId).then(show => {
+
+    //   for (var i=0; i<=4; i++) {
+    //     console.log(show._embedded.cast[i].person.name);
+    //     let cast = show._embedded.cast[i].person.name;
+    //     this.viewElems.showPreview.appendChild(card);
+    //     }
+      // show._embedded.cast[1].person.name
+      // console.log(show._embedded.cast[1].person.name);
+      // console.log(show._embedded.cast[2].person.name);
+      // console.log(show._embedded.cast[3].person.name);
+      // console.log(show._embedded.cast[4].person.name);
+      // for (const () of shows){
+      //   console.log(show._embedded.cast);
+      // }
+    });
+      
   }
 
   closeDetailsView = event => {
@@ -68,9 +85,7 @@ class TVApp {
     closeBtn.removeEventListener('click', this.closeDetailsView);
     this.viewElems.showPreview.style.display = 'none';
     this.viewElems.showPreview.innerHTML = '';
-    const body = document.querySelector('body');
-    // $('body').css("overflow", "initial");
-    body.style.overflow = 'initial';
+    document.body.style.overflow = 'initial';
   }
 
   createShowCard = (show, isDetailed) => {
@@ -79,15 +94,17 @@ class TVApp {
     const h5 = createDOMElem('h5', 'card-title', show.name);
     const btn = createDOMElem('button', 'btn btn-primary', 'Show details');
     
-    let img, p;
+    let img, p, pGenres, pRuntime, pCast;
 
     if(show.image) {
       if(isDetailed){
-        img = createDOMElem('div', 'card-preview-bg', null, 'https://via.placeholder.com/210x75');
+        img = createDOMElem('div', 'card-preview-bg');
         img.style.backgroundImage = `url('${show.image.original}')`
       } else {
         img = createDOMElem('img', 'card-img-top', null, show.image.medium);
       }
+    } else if (isDetailed) {
+      img = createDOMElem('img', 'card-img-top', null, 'https://via.placeholder.com/210x75');
     } else {
       img = createDOMElem('img', 'card-img-top', null, 'https://via.placeholder.com/210x295');
     }
@@ -102,8 +119,14 @@ class TVApp {
       p = createDOMElem('p', 'card-text', "This show has no summary yet");
     }
 
+    // getShowById(showId).then(show => {
+    //   for (var i=0; i<=4; i++) {
+    //         const cast = show._embedded.cast[i].person.name;
+    //         pCast = createDOMElem('p', 'card-text', 'cast');
+    //         divCardBody.appendChild(pCast);
+    //       }
+    //     }
 
-    
     const btnReturn = createDOMElem('button', 'btn btn-secondary', 'Close details');
     btn.dataset.showId = show.id;
     btnReturn.dataset.showId = show.id;
@@ -112,6 +135,19 @@ class TVApp {
     divCardBody.appendChild(img);
     divCardBody.appendChild(h5);
     divCardBody.appendChild(p);
+    if(show.genres) {
+      if(isDetailed) {
+        pGenres = createDOMElem('p', 'card-text', `Genre: ${show.genres}`);
+        divCardBody.appendChild(pGenres);
+      };
+    }
+    if(show.runtime){
+      if(isDetailed) {
+        pRuntime = createDOMElem('p', 'card-text', `Runtime: ${show.runtime} minutes`);
+        divCardBody.appendChild(pRuntime);
+      };
+    }
+
     divCardBody.appendChild(btn);
 
     if(isDetailed) {
