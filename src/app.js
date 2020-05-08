@@ -64,7 +64,7 @@ class TVApp {
   closeDetailsView = event => {
     const { showId } = event.target.dataset;
     const closeBtn = document.querySelector(`[id="showPreview"] [data-show-id="${showId}"]`);
-    closeBtn.removeEventListener('click', this.closeDetailsView);
+    closeBtn.removeEventListener('click', this.createPreviewCard());
     this.viewElems.showPreview.style.display = 'none';
     this.viewElems.showPreview.innerHTML = '';
     document.body.style.overflow = 'initial';
