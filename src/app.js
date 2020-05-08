@@ -8,6 +8,7 @@ class TVApp {
     this.showNameButtons = {};
     this.selectedName = 'harry';
     this.initializeApp();
+    this.openedCard = null;
   }
 
   initializeApp = () => {
@@ -54,20 +55,11 @@ class TVApp {
   openDeatilsView = event => {
     const { showId } = event.target.dataset;
     getShowById(showId).then(show => {
-      const card = new CardComponent(show).createDetailedCard();
-      this.viewElems.showPreview.appendChild(card);
+      this.openedCard = new CardComponent(show, this.closeDetailsView);
+      this.viewElems.showPreview.appendChild(this.openedCard.createDetailedCard());
       this.viewElems.showPreview.style.display = 'block';
       document.body.style.overflow = 'hidden';
     });
-  }
-
-  closeDetailsView = event => {
-    const { showId } = event.target.dataset;
-    const closeBtn = document.querySelector(`[id="showPreview"] [data-show-id="${showId}"]`);
-    closeBtn.removeEventListener('click', this.createPreviewCard());
-    this.viewElems.showPreview.style.display = 'none';
-    this.viewElems.showPreview.innerHTML = '';
-    document.body.style.overflow = 'initial';
   }
 }
 

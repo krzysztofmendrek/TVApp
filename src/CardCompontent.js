@@ -7,6 +7,14 @@ export default class CardComponent {
     this.card = createDOMElem('div', 'card');
   }
 
+  removeDetailedView = event => {
+    this.viewElems.showPreview.style.display = 'none';
+    this.viewElems.showPreview.innerHTML = '';
+    document.body.style.overflow = 'initial';
+    const closeBtn = document.querySelector(`[id="showPreview"] [data-show-id="${showId}"]`);
+    closeBtn.removeEventListener('click', this.btnFunc);
+  }
+
   createDetailedCard = () => {
     const divCardBody = createDOMElem('div', 'card-body');
     const h5 = createDOMElem('h5', 'card-title', this.show.name);
@@ -59,7 +67,7 @@ export default class CardComponent {
     }
 
     divCardBody.appendChild(btnReturn);
-    btnReturn.addEventListener('click', this.btnFunc);
+    btnReturn.addEventListener('click', removeDetailedView);
     
     return this.card;
   }
